@@ -1,7 +1,9 @@
 import React, { useState } from "react";
-import { PlusCircle, MinusCircle } from "lucide-react";
-import { Card, CardContent, CardHeader } from "./cards";
+import { PlusCircle, MinusCircle, CircleFadingPlus, Plus } from "lucide-react";
+import { CardHeader } from "./cards";
 import { useTaskStore } from "../store/TaskStore";
+import Card from "@mui/material/Card";
+import Paper from "@mui/material/Paper";
 
 const TaskBoard: React.FC = () => {
   const {
@@ -43,18 +45,18 @@ const TaskBoard: React.FC = () => {
   };
 
   const submitTask = () => {
-    if (newTask.title.trim() && newTask.description.trim()) {
-      addTask(activeColumn!, newTask.title, newTask.description);
+    if (newTask.title.trim()) {
+      addTask(activeColumn!, newTask.title);
       setNewTask({ title: "", description: "" });
       setActiveColumn(null);
     }
   };
 
   const columns = {
-    todo: { title: "To Do", color: "bg-gray-100" },
-    inProgress: { title: "In Progress", color: "bg-blue-50" },
-    review: { title: "Review", color: "bg-yellow-50" },
-    done: { title: "Done", color: "bg-green-50" },
+    todo: { title: "To Do", color: "bg-red-200" },
+    inProgress: { title: "In Progress", color: "bg-blue-100" },
+    review: { title: "Review", color: "bg-yellow-100" },
+    done: { title: "Done", color: "bg-green-100" },
   };
 
   return (
@@ -64,12 +66,17 @@ const TaskBoard: React.FC = () => {
         {Object.entries(columns).map(([columnId, { title, color }]) => (
           <div
             key={columnId}
-            className={`${color} p-4 rounded-lg`}
+            className={` p-4 rounded-lg `}
             onDrop={(e) => handleDrop(e, columnId)}
             onDragOver={handleDragOver}
           >
             <div className="flex justify-between items-center mb-4">
-              <h2 className="font-semibold">{title}</h2>
+              <div className=" flex items-center gap-2">
+                <h2 className={` ${color} px-2 rounded-sm`}>{title}</h2>
+                <h4 className=" text-sm text-gray-400 font-semibold">
+                  {tasks[columnId].length}
+                </h4>
+              </div>
               <button
                 onClick={() => handleAddTask(columnId)}
                 className="text-gray-600 hover:text-gray-900"
@@ -77,21 +84,20 @@ const TaskBoard: React.FC = () => {
                 <PlusCircle className="w-5 h-5" />
               </button>
             </div>
-            <div className="space-y-2">
+            <div className="space-y-2 md:max-h-80 overflow-y-auto">
               {tasks[columnId].map((task) => (
                 <Card
                   key={task.id}
                   draggable
                   onDragStart={(e) => handleDragStart(e, task.id, columnId)}
-                  className="cursor-move bg-white flex items-start justify-between"
+                  className="cursor-move bg-white flex items-center justify-between"
                 >
                   <div>
                     <CardHeader className="p-3">
-                      <h3 className="font-medium">{task.title}</h3>
+                      <h3 className="font-medium text-ellipsis line-clamp-1">
+                        {task.title}
+                      </h3>
                     </CardHeader>
-                    <CardContent className="p-3 pt-0 text-sm text-gray-600">
-                      {task.description}
-                    </CardContent>
                   </div>
                   <button
                     onClick={() => deleteTask(task.id, columnId)}
@@ -101,6 +107,12 @@ const TaskBoard: React.FC = () => {
                   </button>
                 </Card>
               ))}
+            </div>
+            <div
+              className=" flex text-gray-400 text-sm cursor-pointer hover:text-gray-600 duration-300 mt-2"
+              onClick={() => handleAddTask(columnId)}
+            >
+              <Plus size={20} /> New
             </div>
           </div>
         ))}
@@ -119,14 +131,7 @@ const TaskBoard: React.FC = () => {
                 setNewTask({ ...newTask, title: e.target.value })
               }
             />
-            <textarea
-              placeholder="Task Description"
-              className="w-full border p-2 mb-2"
-              value={newTask.description}
-              onChange={(e) =>
-                setNewTask({ ...newTask, description: e.target.value })
-              }
-            />
+
             <div className="flex justify-end space-x-2">
               <button
                 onClick={() => setActiveColumn(null)}

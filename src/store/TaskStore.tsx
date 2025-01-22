@@ -4,7 +4,6 @@ import { persist } from "zustand/middleware";
 interface Task {
   id: string;
   title: string;
-  description: string;
 }
 
 interface TaskState {
@@ -25,7 +24,7 @@ interface TaskStore {
     sourceColumn: string,
     targetColumn: string
   ) => void;
-  addTask: (column: string, title: string, description: string) => void;
+  addTask: (column: string, title: string) => void;
   deleteTask: (taskId: string, column: string) => void;
 }
 
@@ -37,29 +36,23 @@ export const useTaskStore = create<TaskStore>()(
           {
             id: "1",
             title: "Research competitors",
-            description: "Analyze main competitors",
           },
           {
             id: "2",
             title: "Design mockups",
-            description: "Create initial designs",
           },
         ],
         inProgress: [
           {
             id: "3",
             title: "Update documentation",
-            description: "Review and update docs",
           },
         ],
-        review: [
-          { id: "4", title: "Code review", description: "Review PR #123" },
-        ],
+        review: [{ id: "4", title: "Code review" }],
         done: [
           {
             id: "5",
             title: "Setup project",
-            description: "Initial project setup",
           },
         ],
       },
@@ -81,7 +74,7 @@ export const useTaskStore = create<TaskStore>()(
             },
           };
         }),
-      addTask: (column, title, description) =>
+      addTask: (column, title) =>
         set((state) => ({
           tasks: {
             ...state.tasks,
@@ -90,7 +83,6 @@ export const useTaskStore = create<TaskStore>()(
               {
                 id: Math.random().toString(36).substring(7),
                 title,
-                description,
               },
             ],
           },
