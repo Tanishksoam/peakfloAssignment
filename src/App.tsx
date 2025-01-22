@@ -1,10 +1,13 @@
 import React from "react";
-import KanbanBoard from "./components/KanbanBoard";
+
+import TaskBoard from "./components/board";
 
 const App: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-200 flex items-center justify-center">
-      <KanbanBoard />
+      <TaskBoard />
+
+     
     </div>
   );
 };
