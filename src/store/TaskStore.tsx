@@ -17,6 +17,7 @@ interface DraggingTask {
 
 interface TaskStore {
   tasks: TaskState;
+  columns: { [key: string]: { title: string; color: string } };
   draggingTask: DraggingTask | null;
   setDraggingTask: (task: DraggingTask | null) => void;
   moveTask: (
@@ -26,11 +27,18 @@ interface TaskStore {
   ) => void;
   addTask: (column: string, title: string) => void;
   deleteTask: (taskId: string, column: string) => void;
+  addColumn: (title: string, columnName: string) => void;
 }
 
 export const useTaskStore = create<TaskStore>()(
   persist(
     (set) => ({
+      columns: {
+        todo: { title: "To Do", color: "bg-red-200" },
+        inProgress: { title: "In Progress", color: "bg-blue-100" },
+        review: { title: "Review", color: "bg-yellow-100" },
+        done: { title: "Done", color: "bg-green-100" },
+      },
       tasks: {
         todo: [
           {
@@ -92,6 +100,17 @@ export const useTaskStore = create<TaskStore>()(
           tasks: {
             ...state.tasks,
             [column]: state.tasks[column].filter((task) => task.id !== taskId),
+          },
+        })),
+      addColumn: (title, columnName) =>
+        set((state) => ({
+          columns: {
+            ...state.columns,
+            [columnName]: { title, color: "bg-red-200" },
+          },
+          tasks: {
+            ...state.tasks,
+            [columnName]: [],
           },
         })),
     }),
