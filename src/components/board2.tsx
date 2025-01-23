@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { PlusCircle, MinusCircle, CircleFadingPlus, Plus } from "lucide-react";
+import { PlusCircle, MinusCircle, Plus } from "lucide-react";
 import { CardHeader } from "./cards";
 import { useTaskStore } from "../store/TaskStore";
 import Card from "@mui/material/Card";
@@ -23,6 +23,7 @@ const TaskBoard: React.FC = () => {
     taskId: string,
     sourceColumn: string
   ): void => {
+    e.preventDefault();
     setDraggingTask({ id: taskId, sourceColumn });
   };
 
@@ -59,13 +60,6 @@ const TaskBoard: React.FC = () => {
       setActiveColumn(null);
     }
   };
-
-  // const [columns, setColumns] = useState({
-  //   todo: { title: "To Do", color: "bg-red-200" },
-  //   inProgress: { title: "In Progress", color: "bg-blue-100" },
-  //   review: { title: "Review", color: "bg-yellow-100" },
-  //   done: { title: "Done", color: "bg-green-100" },
-  // });
 
   return (
     <div className="w-full max-w-6xl mx-auto p-4">
