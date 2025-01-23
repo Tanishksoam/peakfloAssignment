@@ -46,7 +46,7 @@ const TaskBoard: React.FC = () => {
   };
 
   const handleNewColumn = () => {
-    const newColumn = prompt("Enter new column name");
+    const newColumn = prompt("Enter new Status name");
     if (newColumn) {
       addColumn(newColumn, newColumn.toLowerCase());
     }
