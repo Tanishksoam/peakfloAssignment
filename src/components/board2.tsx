@@ -5,6 +5,13 @@ import { useTaskStore } from "../store/TaskStore";
 import Card from "@mui/material/Card";
 import { Tooltip } from "@mui/material";
 
+interface TaskObject {
+  id: string;
+  title: string;
+  description: string;
+  column?: string;
+}
+
 const TaskBoard: React.FC = () => {
   const {
     columns,
@@ -18,8 +25,8 @@ const TaskBoard: React.FC = () => {
     updateTask,
   } = useTaskStore();
   const [newTask, setNewTask] = useState({ title: "", description: "" });
-  const [taskOpen, setTaskOpen] = useState<object | null>(null);
-  const [updatetask, setUpdateTask] = useState<object | null>(null);
+  const [taskOpen, setTaskOpen] = useState<TaskObject | null>(null);
+  const [updatetask, setUpdateTask] = useState<TaskObject | null>(null);
   const [activeColumn, setActiveColumn] = useState<string | null>(null);
 
   const handleDragStart = (taskId: string, sourceColumn: string): void => {
@@ -54,16 +61,18 @@ const TaskBoard: React.FC = () => {
   const handleOcClick = (task: string, column: string) => {
     const alltask = Object.values(tasks).flat();
     const taskIndex = alltask.findIndex((t) => t.id === task);
-    setTaskOpen({ ...alltask[taskIndex], column: column });
+    setTaskOpen({ ...alltask[taskIndex], column: column, description: alltask[taskIndex].description || "" });
   };
 
   const handleUpdateTask = () => {
     setUpdateTask(taskOpen);
-    setNewTask({ title: taskOpen.title, description: taskOpen.description });
+    if (taskOpen) {
+      setNewTask({ title: taskOpen.title, description: taskOpen.description });
+    }
   };
 
   const updateTaskSubmit = () => {
-    if (newTask.title.trim()) {
+    if (newTask.title.trim() && taskOpen && taskOpen.column) {
       updateTask(
         taskOpen.id,
         taskOpen.column,
@@ -172,7 +181,9 @@ const TaskBoard: React.FC = () => {
               </button>
               <button
                 onClick={() => {
-                  deleteTask(taskOpen.id, taskOpen.column);
+                  if (taskOpen?.column) {
+                    deleteTask(taskOpen.id, taskOpen.column);
+                  }
                   setTaskOpen(null);
                 }}
                 className="px-4 py-2 bg-red-200 text-white rounded"
