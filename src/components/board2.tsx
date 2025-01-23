@@ -3,6 +3,7 @@ import { PlusCircle, MinusCircle, Plus } from "lucide-react";
 import { CardHeader } from "./cards";
 import { useTaskStore } from "../store/TaskStore";
 import Card from "@mui/material/Card";
+import { Tooltip } from "@mui/material";
 
 const TaskBoard: React.FC = () => {
   const {
@@ -77,12 +78,14 @@ const TaskBoard: React.FC = () => {
                       {tasks[columnId].length}
                     </h4>
                   </div>
-                  <button
-                    onClick={() => handleNewColumn()}
-                    className="text-gray-600 hover:text-gray-900"
-                  >
-                    <PlusCircle className="w-5 h-5" />
-                  </button>
+                  <Tooltip title="Add new column">
+                    <button
+                      onClick={() => handleNewColumn()}
+                      className="text-gray-600 hover:text-gray-900"
+                    >
+                      <PlusCircle className="w-5 h-5" />
+                    </button>
+                  </Tooltip>
                 </div>
                 <div className="space-y-2 md:max-h-80 overflow-y-auto">
                   {tasks[columnId].map((task) => (

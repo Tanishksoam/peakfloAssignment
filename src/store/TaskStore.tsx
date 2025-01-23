@@ -34,10 +34,9 @@ export const useTaskStore = create<TaskStore>()(
   persist(
     (set) => ({
       columns: {
-        todo: { title: "To Do", color: "bg-red-200" },
+        todo: { title: "Not Started", color: "bg-red-200" },
         inProgress: { title: "In Progress", color: "bg-blue-100" },
-        review: { title: "Review", color: "bg-yellow-100" },
-        done: { title: "Done", color: "bg-green-100" },
+        completed: { title: "Completed", color: "bg-yellow-100" },
       },
       tasks: {
         todo: [
@@ -56,13 +55,7 @@ export const useTaskStore = create<TaskStore>()(
             title: "Update documentation",
           },
         ],
-        review: [{ id: "4", title: "Code review" }],
-        done: [
-          {
-            id: "5",
-            title: "Setup project",
-          },
-        ],
+        completed: [{ id: "4", title: "Code review" }],
       },
       draggingTask: null,
       setDraggingTask: (task) => set({ draggingTask: task }),
