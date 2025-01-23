@@ -1,5 +1,6 @@
 import React from "react";
 import TaskBoard from "./components/board2";
+import "./App.css";
 
 const App: React.FC = () => {
   return (
