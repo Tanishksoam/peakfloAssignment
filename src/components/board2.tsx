@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { PlusCircle, MinusCircle, Plus } from "lucide-react";
+import { PlusCircle, Plus } from "lucide-react";
 import { CardHeader } from "./cards";
 import { useTaskStore } from "../store/TaskStore";
 import Card from "@mui/material/Card";
@@ -14,7 +14,6 @@ const TaskBoard: React.FC = () => {
     setDraggingTask,
     moveTask,
     addTask,
-    deleteTask,
     addColumn,
   } = useTaskStore();
   const [newTask, setNewTask] = useState({ title: "", description: "" });
@@ -109,12 +108,6 @@ const TaskBoard: React.FC = () => {
                           </h3>
                         </CardHeader>
                       </div>
-                      <button
-                        onClick={() => deleteTask(task.id, columnId)}
-                        className="text-orange-700 hover:text-red-500 cursor-pointer p-2"
-                      >
-                        <MinusCircle className="w-5 h-5" />
-                      </button>
                     </Card>
                   ))}
                 </div>
