@@ -30,6 +30,8 @@ interface TaskStore {
   addColumn: (title: string, columnName: string) => void;
 }
 
+const colors = ["bg-red-200", "bg-blue-200", "bg-yellow-200", "bg-green-200"];
+
 export const useTaskStore = create<TaskStore>()(
   persist(
     (set) => ({
@@ -99,7 +101,7 @@ export const useTaskStore = create<TaskStore>()(
         set((state) => ({
           columns: {
             ...state.columns,
-            [columnName]: { title, color: "bg-red-200" },
+            [columnName]: { title, color: colors[Math.floor(Math.random() * colors.length)] },
           },
           tasks: {
             ...state.tasks,
