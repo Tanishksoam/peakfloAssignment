@@ -6,13 +6,6 @@ import Card from "@mui/material/Card";
 import { Tooltip } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
-interface TaskObject {
-  id: string;
-  title: string;
-  description: string;
-  column?: string;
-}
-
 const TaskBoard: React.FC = () => {
   const {
     columns,
@@ -23,11 +16,8 @@ const TaskBoard: React.FC = () => {
     addTask,
     deleteTask,
     addColumn,
-    updateTask,
   } = useTaskStore();
   const [newTask, setNewTask] = useState({ title: "", description: "" });
-  const [taskOpen, setTaskOpen] = useState<TaskObject | null>(null);
-  const [updatetask, setUpdateTask] = useState<TaskObject | null>(null);
   const [activeColumn, setActiveColumn] = useState<string | null>(null);
 
   const navigate = useNavigate();
@@ -61,37 +51,10 @@ const TaskBoard: React.FC = () => {
       addColumn(newColumn, newColumn.toLowerCase());
     }
   };
-  const handleOcClick = (task: string, column: string) => {
-    const alltask = Object.values(tasks).flat();
-    const taskIndex = alltask.findIndex((t) => t.id === task);
+  const handleOcClick = (task: string) => {
     navigate(`/${task}`);
-    setTaskOpen({
-      ...alltask[taskIndex],
-      column: column,
-      description: alltask[taskIndex].description || "",
-    });
   };
 
-  const handleUpdateTask = () => {
-    setUpdateTask(taskOpen);
-    if (taskOpen) {
-      setNewTask({ title: taskOpen.title, description: taskOpen.description });
-    }
-  };
-
-  const updateTaskSubmit = () => {
-    if (newTask.title.trim() && taskOpen && taskOpen.column) {
-      updateTask(
-        taskOpen.id,
-        taskOpen.column,
-        newTask.title,
-        newTask.description
-      );
-      setTaskOpen(null);
-      setUpdateTask(null);
-      setNewTask({ title: "", description: "" });
-    }
-  };
   const submitTask = () => {
     if (newTask.title.trim()) {
       addTask(activeColumn!, newTask.title, newTask.description);
@@ -135,7 +98,7 @@ const TaskBoard: React.FC = () => {
                     <Card
                       key={task.id}
                       draggable
-                      onClick={() => handleOcClick(task.id, columnId)}
+                      onClick={() => handleOcClick(task.id)}
                       onDragStart={() => handleDragStart(task.id, columnId)}
                       className="cursor-move bg-white flex items-center justify-between"
                     >
@@ -166,85 +129,7 @@ const TaskBoard: React.FC = () => {
           )
         )}
       </div>
-      {taskOpen !== null && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-            <h2 className="text-xl font-bold mb-4">{taskOpen?.title}</h2>
-            <h2 className="text-md font-normal mb-4">
-              {taskOpen?.description}
-            </h2>
-            <p
-              className="text-sm text-gray-400 underline cursor-pointer "
-              onClick={() => handleUpdateTask()}
-            >
-              edit details
-            </p>
 
-            <div className="flex justify-end space-x-2">
-              <button
-                onClick={() => setTaskOpen(null)}
-                className="px-4 py-2 bg-gray-300 rounded"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={() => {
-                  if (taskOpen?.column) {
-                    deleteTask(taskOpen.id, taskOpen.column);
-                  }
-                  setTaskOpen(null);
-                }}
-                className="px-4 py-2 bg-red-200 text-white rounded"
-              >
-                delete Task
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {updatetask !== null && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-            <h2 className="text-xl font-bold mb-4">Update Task Details</h2>
-            <input
-              type="text"
-              placeholder="Task Title"
-              className="w-full border p-2 mb-2"
-              value={newTask.title}
-              onChange={(e) =>
-                setNewTask({ ...newTask, title: e.target.value })
-              }
-            />
-            <textarea
-              placeholder="Description"
-              className="w-full border p-2 mb-2"
-              value={newTask.description}
-              onChange={(e) =>
-                setNewTask({ ...newTask, description: e.target.value })
-              }
-            />
-
-            <div className="flex justify-end space-x-2">
-              <button
-                onClick={() => {
-                  setTaskOpen(null);
-                  setUpdateTask(null);
-                }}
-                className="px-4 py-2 bg-gray-300 rounded"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={updateTaskSubmit}
-                className="px-4 py-2 bg-blue-600 text-white rounded"
-              >
-                Update Task
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
       {activeColumn && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-6 rounded-lg shadow-lg w-96">
