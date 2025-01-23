@@ -4,7 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Pencil, Trash2 } from "lucide-react";
 
 const Task = () => {
-  const { tasks, columns, deleteTask, updateTask } = useTaskStore();
+  const { tasks, columns, deleteTask, updateTask, addTask } = useTaskStore();
   const [newTask, setNewTask] = useState({ title: "", description: "" });
   const navigate = useNavigate();
   const [update, setUpdateTask] = useState(false);
@@ -37,8 +37,35 @@ const Task = () => {
       <div className=" w-1/2 flex flex-col items-start justify-start  gap-4">
         <h6 className="text-xl text-gray-700  text-left">Details</h6>
         <p className=" text-lg text-gray-500 p-2 border-[1px] border-gray-100 w-full rounded-lg">
-          {taskSelectd.description}
+          {taskSelectd.description || "No Description"}
         </p>
+      </div>
+      <div className=" w-1/2 flex flex-col items-start justify-start  gap-4">
+        <h6 className="text-xl text-gray-700  text-left">Move Task to stage</h6>
+        <select
+          className="w-full border p-2 rounded-lg"
+          value={columnIndex}
+          onChange={(e) => {
+            const newColumnIndex = e.target.value;
+            if (task && newColumnIndex) {
+              addTask(
+                newColumnIndex,
+                taskSelectd.title,
+                taskSelectd.description || ""
+              );
+              navigate("/");
+              if (columnIndex) {
+                deleteTask(taskSelectd.id, columnIndex);
+              }
+            }
+          }}
+        >
+          {Object.keys(tasks).map((column) => (
+            <option key={column} value={column}>
+              {columns[column].title}
+            </option>
+          ))}
+        </select>
       </div>
       <div className=" flex justify-between items-center gap-2 ">
         <Pencil
