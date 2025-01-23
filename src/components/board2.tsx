@@ -4,6 +4,7 @@ import { CardHeader } from "./cards";
 import { useTaskStore } from "../store/TaskStore";
 import Card from "@mui/material/Card";
 import { Tooltip } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 interface TaskObject {
   id: string;
@@ -28,6 +29,8 @@ const TaskBoard: React.FC = () => {
   const [taskOpen, setTaskOpen] = useState<TaskObject | null>(null);
   const [updatetask, setUpdateTask] = useState<TaskObject | null>(null);
   const [activeColumn, setActiveColumn] = useState<string | null>(null);
+
+  const navigate = useNavigate();
 
   const handleDragStart = (taskId: string, sourceColumn: string): void => {
     setDraggingTask({ id: taskId, sourceColumn });
@@ -61,7 +64,12 @@ const TaskBoard: React.FC = () => {
   const handleOcClick = (task: string, column: string) => {
     const alltask = Object.values(tasks).flat();
     const taskIndex = alltask.findIndex((t) => t.id === task);
-    setTaskOpen({ ...alltask[taskIndex], column: column, description: alltask[taskIndex].description || "" });
+    navigate(`/${task}`);
+    setTaskOpen({
+      ...alltask[taskIndex],
+      column: column,
+      description: alltask[taskIndex].description || "",
+    });
   };
 
   const handleUpdateTask = () => {
