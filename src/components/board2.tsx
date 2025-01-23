@@ -18,12 +18,7 @@ const TaskBoard: React.FC = () => {
   const [newTask, setNewTask] = useState({ title: "", description: "" });
   const [activeColumn, setActiveColumn] = useState<string | null>(null);
 
-  const handleDragStart = (
-    e: React.DragEvent<HTMLDivElement>,
-    taskId: string,
-    sourceColumn: string
-  ): void => {
-    e.preventDefault();
+  const handleDragStart = (taskId: string, sourceColumn: string): void => {
     setDraggingTask({ id: taskId, sourceColumn });
   };
 
@@ -94,7 +89,7 @@ const TaskBoard: React.FC = () => {
                     <Card
                       key={task.id}
                       draggable
-                      onDragStart={(e) => handleDragStart(e, task.id, columnId)}
+                      onDragStart={() => handleDragStart(task.id, columnId)}
                       className="cursor-move bg-white flex items-center justify-between"
                     >
                       <div>
